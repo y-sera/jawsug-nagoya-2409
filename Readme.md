@@ -26,12 +26,14 @@ CodeCatalystの初期設定を行う.
 ![アカウント関連付け](codecatalyst_account_association3.png)
 ![アカウント関連付け](codecatalyst_account_association4.png)
 5. しばらく待つ.
+6. プロジェクト作成画面へ移動する
+![プロジェクト作成画面](space_create.png)
 
 ---
 ## 3. プロジェクト作成(3分)
 1. プロジェクト作成画面にて「Start with a blueprint」 -> 「CodeCatalyst blueprintsタブ」->「PDK - Monorepo」を選択して「Next」をクリック.
 2. 以下の項目を入力
-- Name your project: Typescript
+- Name your project: jawsnagoya
 - Primary programming language: Typescript
 3. 右下の「Create project」をクリック.
 
@@ -55,14 +57,14 @@ PDKのブループリントを使用して, 型安全なAPIを追加する.
 2. 画面右上のAdd blueprintをクリックする.
 3. 「PDK - Type Safe API」を選択し, Nextをクリック.
 4. 設定値を確認する. 
-基本そのままの設定でok.
-- Target version: 0.0.131
-- Model Language: Smithy
-- Namespace: com.aws
+
+- Target version: 0.0.131 (デフォルト値)
+- Model Language: Smithy (デフォルト値)
+- Namespace: com.aws (デフォルト値)
 - API name: JawsNagoyaApi
-- CDK language: Typescript
-- Handler langages: Typescript
-- Documentation formats: HTML_REDOC
+- CDK language: Typescript (デフォルト値)
+- Handler langages: Typescript (デフォルト値)
+- Documentation formats: HTML_REDOC (デフォルト値)
 5. 「Add blueprint」をクリック.
 6. リポジトリにblueprintを追加するプルリクエストが作成されるので, これをマージする.  
 画面左側の「Code」から, 「Pull requests」をクリック.
@@ -204,7 +206,7 @@ PDKのブループリントを使用して, AWSアカウントにプロジェク
 - Region: 「Asia Pacific(Tokyo)」
 4. 「Add blueprint」をクリック.
 5. 先ほどと同様に, リポジトリにプルリクエストとして追加されたブループリントをマージする.
-「Code」->「Pull requests」 -> 「chore(resynthesis): update [pdk-devops@0.0.158]」->「Mearge」 -> 「Fast forward mergeを選択してマージ」
+「Code」->「Pull requests」 -> 「chore(resynthesis): update [pdk-devops@0.0.158]」->「Mearge」 -> 「Fast forward merge」を選択してマージ
 
 ---
 ## 12. ワークフローの稼働確認
@@ -217,7 +219,7 @@ DevOpsのブループリントにて作成したワークフローが正常に�
 3. Buildの四角をクリックすると, 現在走っている処理の内容が確認できる. 15~20分ほど待つ.
 
 ---
-## 13. webサイトログイン用ユーザ作成
+## 13. webサイトログイン用ユーザ作成(オプション)
 今回デプロイしたwebサイトはCognitoでユーザ管理を行っている. 
 そのため, ログインのためにユーザを手動で作成する.
 
@@ -233,7 +235,7 @@ DevOpsのブループリントにて作成したワークフローが正常に�
 6. ユーザ一覧にて, ユーザが作成できていることを確認する. また, 登録したメールアドレスに仮パスワードが届いていることを確かめる.
 
 ---
-## 14. デモサイトにログイン
+## 14. デモサイトにログイン(オプション)
 今回デプロイした画面を確認してみる. 
 
 1. リリース用のワークフロー画面を開く. (画面左「CI/CD」-> 「workflows」 -> 「release」)
@@ -254,6 +256,7 @@ DevOpsのブループリントにて作成したワークフローが正常に�
 ## 15. 後片付け1 CloudFormationのスタック削除
 1. AWSにログインし, CloudFormationの画面へ移動する.
 2. 「jaws-nagoya-handson」のスタックを選択し, 削除をクリックする.
+※ S3の削除に失敗する場合は, 中身を削除してから再度実行する.
 
 ---
 ## 16. 後片付け2 プロジェクトの削除
