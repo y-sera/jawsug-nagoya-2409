@@ -89,7 +89,7 @@ PDKのブループリントを使用して, Reactベースのwebサイトを追�
 
 ---
 ## 7. インフラを追加
-PDKのブループリントを使用して, CDKからインフラをデプロイするためのコードをプロジェクトに追加する.
+PDKのブループリントを使用して, CDKからAWSリソースをデプロイするためのコードをプロジェクトに追加する.
 webサイトとAPIをデプロイするために構成されたCDKコードをプロジェクトに付与する. 
 CDKで作成するCloudFormationのスタック名を覚えておくこと.
 
@@ -106,39 +106,9 @@ CDKで作成するCloudFormationのスタック名を覚えておくこと.
 「Code」->「Pull requests」 -> 「hore(resynthesis): update [pdk-infra@0.0.132]」->「Mearge」 -> 「Fast forward mergeを選択してマージ」
 
 ---
-## 8. DevOpsを追加
-PDKのブループリントを使用して, AWSアカウントにプロジェクトをビルド&デプロイするワークフローを作成する.
-
-1. 画面左の「Blueprints」をクリックし, 画面右上「Add blueprint」をクリック
-2. ブループリントの一覧から, 「PDK - DevOps」を選択して「Next」をクリック.
-3. 設定値を編集する
-- Target version: 0.0.158(デフォルト値)
-- Bootstrap CDK: 有効(チェックボックス入力)(デフォルト値)
-- stack Name: 「jaws-nagoya-handson」(前項で入力したstack名と一致させる)
-- AWS account connection: 「(自身のAWSアカウント番号を選択)」
-- IAM Role: 「CodeCatalystWorkflowDevelopmentRole-<スペース名>」(CodeCatalystに関連付けたIAMロールがない場合 -> Add IAMロールからIAMロールの追加を行う)
-![IAMロールがない場合](noting_IAMrole.png)
-![Add IAM Roleをクリック後](IAMRole_create.png)
-- Region: 「Asia Pacific(Tokyo)」
-4. 「Add blueprint」をクリック.
-5. 先ほどと同様に, リポジトリにプルリクエストとして追加されたブループリントをマージする.
-「Code」->「Pull requests」 -> 「chore(resynthesis): update [pdk-devops@0.0.158]」->「Mearge」 -> 「Fast forward mergeを選択してマージ」
-
----
-## 9. ワークフローの稼働確認
-DevOpsのブループリントにて作成したワークフローが正常に稼働し、アプリケーションが環境にデプロイされることを確認する.
-
-1. 画面左側の「CI/CD」-> 「Workflowsをクリック」
-2. 「release」の方をクリックすると, マージ作成からデプロイまでの一連のワークフローが確認できる.
-![ワークフロー図](workflow.png)
-
-3. Buildの四角をクリックすると, 現在走っている処理の内容が確認できる.
-4. デプロイが完了するまで待つ(15分程度) おそらく失敗するので, 次の章で開発環境を立ち上げつつ改修する.
-5. 失敗内容の確認. ワークフローの該当箇所から確認できる. ログを見ると, npmパッケージの依存関係周りだと分かる. (projenのバージョンの競合)
-
----
-## 10. 開発環境の立ち上げ
-開発環境を立ち上げ, コードを編集してみる.
+## 8. 開発環境の立ち上げ
+この後DevOpsパイプライン用のブループリントを適用するのだが, このままだとパッケージの依存関係の問題でCDKのデプロイがうまくいかない. 
+このためコード修正を先に行うが, せっかくなのでCodeCatalystの開発環境で修正を行う.
 開発環境はVSCodeで開いてみる(裏ではインスタンスを立てて, 自動的にsshでリモート接続している.)
 
 1. 画面左側「Code」 -> 「Dev Environments」をクリック.
@@ -153,9 +123,8 @@ DevOpsのブループリントにて作成したワークフローが正常に�
 4. ブラウザから, URLをVSCodeで開くか聞かれるのでその通りに従う.
 5. しばらくすると, CodeCatalystにssh接続したVSCodeの新しいウィンドウが開く.(この間, 必要な拡張機能等あれば都度インストールする)
 
-
 ---
-## 11. コード修正
+## 9. コード修正
 VSCode上からコード修正し, リモートに開発用ブランチをpushする.
 
 1. VSCode上でターミナルを開く. (タブ -> ターミナル -> 新しいターミナル)
@@ -204,7 +173,7 @@ git push origin develop
 ```
 
 ---
-## 12. プルリクエスト作成 & マージ
+## 10. プルリクエスト作成 & マージ
 1. 画面左側「Code」 -> 「Pull requests」をクリックし, Create pullrequestを作成する. 
 
 2. プルリクエストの詳細を入力する.
@@ -216,7 +185,36 @@ git push origin develop
 3. プルリクエストが作成される. ここで, 画面右上の「Merge」をクリックする.
 4. 「Fast forward merge」を選択し, 「Merge」をクリック.
 ![プルリクエストマージ画面](pullrequest.png)
-これで, 依存関係を解消しつつ再度CICDのワークフローが走り始める. (15分~20分ほど待つ)
+
+
+---
+## 11. DevOpsを追加
+PDKのブループリントを使用して, AWSアカウントにプロジェクトをビルド&デプロイするワークフローを作成する.
+
+1. 画面左の「Blueprints」をクリックし, 画面右上「Add blueprint」をクリック
+2. ブループリントの一覧から, 「PDK - DevOps」を選択して「Next」をクリック.
+3. 設定値を編集する
+- Target version: 0.0.158(デフォルト値)
+- Bootstrap CDK: 有効(チェックボックス入力)(デフォルト値)
+- stack Name: 「jaws-nagoya-handson」(前項で入力したstack名と一致させる)
+- AWS account connection: 「(自身のAWSアカウント番号を選択)」
+- IAM Role: 「CodeCatalystWorkflowDevelopmentRole-<スペース名>」(CodeCatalystに関連付けたIAMロールがない場合 -> Add IAMロールからIAMロールの追加を行う)
+![IAMロールがない場合](noting_IAMrole.png)
+![Add IAM Roleをクリック後](IAMRole_create.png)
+- Region: 「Asia Pacific(Tokyo)」
+4. 「Add blueprint」をクリック.
+5. 先ほどと同様に, リポジトリにプルリクエストとして追加されたブループリントをマージする.
+「Code」->「Pull requests」 -> 「chore(resynthesis): update [pdk-devops@0.0.158]」->「Mearge」 -> 「Fast forward mergeを選択してマージ」
+
+---
+## 12. ワークフローの稼働確認
+DevOpsのブループリントにて作成したワークフローが正常に稼働し、アプリケーションが環境にデプロイされることを確認する.
+
+1. 画面左側の「CI/CD」-> 「Workflowsをクリック」
+2. 「release」の方をクリックすると, マージ作成からデプロイまでの一連のワークフローが確認できる.
+![ワークフロー図](workflow.png)
+
+3. Buildの四角をクリックすると, 現在走っている処理の内容が確認できる. 15~20分ほど待つ.
 
 ---
 ## 13. webサイトログイン用ユーザ作成
@@ -233,6 +231,7 @@ git push origin develop
 - 仮パスワード: 「パスワードの生成」
 5. ユーザの作成をクリック
 6. ユーザ一覧にて, ユーザが作成できていることを確認する. また, 登録したメールアドレスに仮パスワードが届いていることを確かめる.
+
 ---
 ## 14. デモサイトにログイン
 今回デプロイした画面を確認してみる. 
@@ -250,6 +249,7 @@ git push origin develop
 
 本当はここからさらにアプリの改修などをやってみたいところだが, 時間がなさそうなのでここまで. 
 後片付けに入る.
+
 ---
 ## 15. 後片付け1 CloudFormationのスタック削除
 1. AWSにログインし, CloudFormationの画面へ移動する.
